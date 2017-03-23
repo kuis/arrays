@@ -611,6 +611,7 @@ module.exports.save = function (req, res) {
                 var makeCopy = false;
 
                 _.forOwn(req.body,function(value,key) {
+                    console.log(key)
         
                     if (key !='author' && key !== '_team' 
                         && key!='createdAt' && key != '_id' && ( (!doc.schema_id && !twoAreEqual(value, doc[key]))
@@ -642,7 +643,6 @@ module.exports.save = function (req, res) {
                 }
             }, 
             function(doc,makeCopy,updateStatement,callback) {
-
                 if (updateStatement !== null && makeCopy == false) {
                     var datasetId = mongoose.Types.ObjectId(doc._id);
 

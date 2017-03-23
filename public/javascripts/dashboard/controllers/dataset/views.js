@@ -15,6 +15,7 @@ angular.module('arraysApp')
                 $scope.$parent.$parent.dataset.fe_views = $scope.previewCopy.fe_views;
                 $scope.primaryAction.text = '';
             }
+            var keywordsChanged = false;
 
             // never needs to be disabled--if it is not needed, it is hidden
             $scope.secondaryAction.disabled = false;
@@ -46,8 +47,14 @@ angular.module('arraysApp')
 
             $scope.$watch('previewCopy', function(previewExist) {
                 $scope.setRemindUserUnsavedChanges(previewExist);
-
-                if (dataset.imported && dataset.dirty == 0 && previewExist !== null && previewExist._id) {
+                // logic for wordCloud keywords
+                if (keywordsChanged) {
+                    $scope.primaryAction.disabled = false;
+                    $scope.primaryAction.text = 'Save';
+                    $scope.primaryAction.do = $scope.submitForm;
+                    // set keywords changed back to false
+                    keywordsChanged = false;
+                } else if (dataset.imported && dataset.dirty == 0 && previewExist !== null && previewExist._id) {
                     $scope.primaryAction.disabled = false;
                     $scope.primaryAction.text = dataset.firstImport ? 'Next' : 'Save';
                     $scope.primaryAction.do = $scope.submitForm;
@@ -189,8 +196,7 @@ angular.module('arraysApp')
                                 $scope.data.default_view = preview.fe_views.default_view;
                                 $scope.$parent.$parent.dataset.fe_views.view = $scope.previewCopy.fe_views;
 
-                            }
-
+                            } 
                         }
 
 
@@ -255,6 +261,11 @@ angular.module('arraysApp')
 
                             /** If user saves changes to a view, make it visible */
                             savedDataset.fe_views.views[data.name].visible = true;
+                            if (data.name == "wordCloud") {
+                                if (reImportKeywordsCache(savedDataset.fe_views.views[data.name].keywords)) {
+                                    keywordsChanged = true;
+                                }
+                            }
 
                             $scope.$parent.$parent.dataset = savedDataset;
 
@@ -270,6 +281,22 @@ angular.module('arraysApp')
 
                 });
             };
+
+            function reImportKeywordsCache(keywords) {
+                var savedKeywords = $scope.$parent.$parent.dataset.fe_views.views["wordCloud"].keywords;
+                if (savedKeywords) {
+                    if (savedKeywords.length == keywords.length) {
+                        if (savedKeywords[savedKeywords.length - 1] == keywords[keywords.length - 1]) {
+                            // nothing has changed
+                            return false;
+                        }
+                        return true;
+                        // it has changed
+                    } else {
+                        return true;
+                    }
+                }
+            }
 
             $scope.openViewPreview = function(viewName) {
                 if ($scope.dataset.fe_views.views[viewName].visible) {
