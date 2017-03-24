@@ -517,8 +517,6 @@ angular.module('arraysApp')
                 //Save settings primary key and object title as set in the ui
                 $scope.saveRequiredFields();
 
-                // console.log($scope.$parent.$parent.dataset)
-
                 if (isValid) {
                     $scope.submitting = true;
 
