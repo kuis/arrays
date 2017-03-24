@@ -339,6 +339,8 @@ angular.module('arraysApp')
                                 $scope.$parent.$parent.dataset.fe_views = response.data.finalView;
 
                                 if (keywordsChanged) {
+                                    dataset.firstImport = 0;
+                                    dataset.dirty = 0;
                                     keywordsChanged = false;
                                     $state.transitionTo('dashboard.dataset.process', {id: $scope.$parent.$parent.dataset._id}, {
                                         reload: true,
