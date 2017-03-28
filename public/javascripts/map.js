@@ -180,6 +180,9 @@ map.on('load', function () {
             } else {
                 filteruse = ['>=', metric, breaks[i] - logOffset];
             }
+            if (radii[i] < 1) {
+                radii[i] = 0.7;
+            }
 
             if (isCoordMap) {
                 map.addLayer({
