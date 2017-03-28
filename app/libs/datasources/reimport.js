@@ -39,8 +39,6 @@ module.exports.mapColumnsOrErr = _mapColumnsOrErr
 var _addNewColumnsToFE_ExcludeFields = function(columns, fields) {
     for (var i = 0; i < columns.length; i++) {
         if (!checkForContinutity(columns[i].name, fields)) {
-            console.log("not the same")
-            console.log("add to fields")
             
             fields[columns[i].name] = false;
         }

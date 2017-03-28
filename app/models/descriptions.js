@@ -106,6 +106,7 @@ var DatasourceDescription_scheme = Schema({
     lastImportInitiatedBy: {type: Schema.Types.ObjectId, ref: 'User'},
 
     imported: {type: Boolean, default: false},
+    replacement: {type: Boolean, default: false},
     firstImport: {type: Number, integer: true, default: 1},
     // 0: false, not first import
     // 1: Source tab
