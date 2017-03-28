@@ -191,7 +191,7 @@ module.exports.approvalRequest = function(req,res) {
             } else {
                 if (!dataset.author.isSuperAdmin()) {
                     nodemailer.notifyVizApprovalAction(dataset,done);
-                }
+                } else done();
                 
             }
         })
