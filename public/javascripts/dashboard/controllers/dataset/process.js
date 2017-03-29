@@ -236,10 +236,10 @@ angular.module('arraysApp')
                 if(datasource.sample == true) {
                     $scope.user.sampleImported = true;
                     User.sampleImported( {id:$scope.user._id}, {sampleImported: true} );
-                    window.Intercom('update', {
-                        email: $scope.user.email,
-                        "Sample Viz Created": $scope.user.sampleImported, // Boolean
-                    });
+                    // window.Intercom('update', {
+                    //     email: $scope.user.email,
+                    //     "Sample Viz Created": $scope.user.sampleImported, // Boolean
+                    // });
                 }
 
                 // //Send notification to Intercom when dataset is imported

@@ -11,7 +11,10 @@ window.civchat = {
         name: "{{ user.defaultLoginTeam.title }}",
         created_at: {{ user.defaultLoginTeam.createdAt | unixTimestamp }},
         plan: "{{ user.defaultLoginTeam.subscription.plan.plan_code }}",
-   }
+   },
+   team_title: "{{ user.defaultLoginTeam.title }}",
+   subdomain: "{{ user.defaultLoginTeam.subdomain }}", // String
+   sample_viz_created: {{ user.sampleImported }}
    {% endif %}
 };
 
