@@ -247,6 +247,12 @@ angular.module('arraysApp')
                    viz_title: datasource.title,
                    sample: datasource.sample || false
                 });
+
+                //Send notification to Intercom when dataset is imported
+                userengage('event.vizImported', {
+                    viz_title: dataset.title,
+                    sample: datasource.sample || false
+                });
                 
                 var id = datasource._id;
 

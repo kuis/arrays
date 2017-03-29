@@ -134,3 +134,8 @@
 }
 
 /* @end footer */
+
+/* Don't display User Engage Chat app*/
+.civ-chat-window { 
+    display: none;
+}

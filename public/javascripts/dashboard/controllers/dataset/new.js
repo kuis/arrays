@@ -15,6 +15,11 @@ angular.module('arraysApp')
                    viz_title: dataset.title,
                 });
 
+                //Send notification to Intercom when new visualization is submitted
+                userengage('event.newVizCreated', {viz_title: dataset.title});
+
+
+
                 if (isValid) {
                     $scope.submitting = true;
 
