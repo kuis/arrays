@@ -180,6 +180,9 @@ map.on('load', function () {
             } else {
                 filteruse = ['>=', metric, breaks[i] - logOffset];
             }
+            if (radii[i] < 1) {
+                radii[i] = 0.7;
+            }
 
             if (isCoordMap) {
                 map.addLayer({
@@ -264,15 +267,15 @@ map.on('load', function () {
         /**
          * Populate the popup and set its coordinates based on the feature found
          */
-        if (isCoordMap && !applyCoordRadius) {
-            popup.setLngLat(e.lngLat)
-                .setHTML('<span class="popup-key">' + feature.properties.name + '</span>')
-                .addTo(map);
-        } else {            
-            popup.setLngLat(e.lngLat)
-                .setHTML('<span class="popup-key">' + feature.properties.name + '</span> <span class="popup-value">' + convertIntegerToReadable(feature.properties.total) + '</span>')
-                .addTo(map);
-        }
+        // if (isCoordMap && !applyCoordRadius) {
+        //     popup.setLngLat(e.lngLat)
+        //         .setHTML('<span class="popup-key">' + feature.properties.name + '</span>')
+        //         .addTo(map);
+        // } else {            
+        popup.setLngLat(e.lngLat)
+            .setHTML('<span class="popup-key">' + feature.properties.name + '</span> <span class="popup-value">' + convertIntegerToReadable(feature.properties.total) + '</span>')
+            .addTo(map);
+        // }
     });
 
 

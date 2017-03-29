@@ -5,6 +5,7 @@ angular.module('arraysApp')
             $scope.$parent.$parent.dataset = dataset;
             $scope.$parent.$parent.currentNavItem = 'upload';
             $scope.progressMode = 'determinate';
+            $scope.newDatasource = false;
 
             $scope.$parent.$parent.discardChangesThisView = angular.noop;
             $scope.setRemindUserUnsavedChanges(false);
@@ -259,6 +260,9 @@ angular.module('arraysApp')
                     dataset.dirty = 1;
                     dataset.fileName = fileItem.file.name;
                     dataset.raw_rowObjects_coercionScheme = response.raw_rowObjects_coercionScheme;
+                    dataset.fe_excludeFields = response.fe_excludeFields;
+                    dataset.fe_excludeFieldsObjDetail = response.fe_excludeFieldsObjDetail;
+                    dataset.replacement = response.replacement;
 
                     $mdToast.show(
                         $mdToast.simple()
@@ -266,6 +270,7 @@ angular.module('arraysApp')
                             .position('top right')
                             .hideDelay(3000)
                     );
+                    $scope.uploader.queue = [];
 
                 } else {
                     // Error
@@ -275,7 +280,6 @@ angular.module('arraysApp')
                             .position('top right')
                             .hideDelay(3000)
                     );
-
                     fileItem.isError = true;
                     fileItem.isUploaded = false;
                     fileItem.isSuccess = false;
@@ -414,5 +418,13 @@ angular.module('arraysApp')
                     );
                     });
             };
+
+            $scope.uploadNewDatasource = function() {
+                $scope.uploader.uploadAll();
+                $scope.uploader.queue = [];
+                $scope.dataset.dirty = 0;
+                $scope.primaryAction.text = 'Next';
+                $scope.primaryAction.do = _save;
+            }
 
         }]);
