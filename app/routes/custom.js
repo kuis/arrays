@@ -76,7 +76,8 @@ router.get('/env',function(req,res) {
             node_env: process.env.NODE_ENV,
             host: host,
             s3Bucket: process.env.AWS_S3_BUCKET,
-            authProtocol: process.env.AUTH_PROTOCOL
+            authProtocol: process.env.AUTH_PROTOCOL,
+            subdomain: process.env.subdomain
         }
         return res.json(obj);
         

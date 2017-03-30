@@ -124,8 +124,8 @@ router.post('/login', function(req, res, next) {
 
 router.get('/login', function(req, res) {
     if (req.user) {
-        User.findById(req.user, function(err, user) {
 
+        User.findById(req.user, function(err, user) {
 
             if (user) {
                 if (!user.defaultLoginTeam || user._team.length === 0) {
