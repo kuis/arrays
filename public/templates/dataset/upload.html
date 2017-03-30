@@ -199,7 +199,7 @@
 
                 <div layout="row" layout-align="start center">
                     <label for="datafile" class="md-button md-dashboard" ng-hide="!uploadForm.$valid || uploader.queue.length > 0" >
-                        Replace data source
+                        <span aa-tooltip="Make sure you include the same columns from your original data source.">Replace data source</span>
                     </label>
                     <span class="aa-file-select-file" ng-class="{'no-file': !uploader.queue[0].file.name}">{{ uploader.queue[0].file.name }}</span>
                 </div>
