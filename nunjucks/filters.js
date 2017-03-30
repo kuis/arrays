@@ -346,7 +346,6 @@ module.exports = function (nunjucks_env,env) {
 
     });
 
-
     nunjucks_env.addFilter('extractPreviewFromBasePath',function(url) {
         var field = 'preview';
         var reg = new RegExp( '[?&]' + field + '=([^&#]*)', 'i' );
@@ -354,7 +353,7 @@ module.exports = function (nunjucks_env,env) {
 
         if (string && string.length > 0) return string[1];
         return;
-    })
+    });
 
     var protocol =  env.USE_SSL === 'true' ? 'https://' : 'http://';
     var host = env.HOST? env.HOST: 'localhost:9080';
