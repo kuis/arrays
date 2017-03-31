@@ -192,7 +192,7 @@ angular.module('arraysApp')
                     additionalDatasource.sourceType = '';
                 };
 
-                additionalDatasource.sourceType = 'csv'; // force csv until JSON is ready
+                additionalDatasource.sourceType =  ($scope.env.node_env=='enterprise' )? '' : 'csv'; // force csv until JSON is ready
                 additionalDatasource.setSourceType = function(type) {
                     additionalDatasource.sourceType = type;
                 };
