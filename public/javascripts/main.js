@@ -19,6 +19,22 @@ $(window).load(function () {
 
 $(document).ready(function () {
 
+    setOriginalTextAttribute('.explore-tile-header h2');
+    setOriginalTextAttribute('.team-link');
+    var isWebkit = 'WebkitAppearance' in document.documentElement.style
+
+    /** 
+     * Truncate team title and vis title if webkit browser
+     */
+    if (!isWebkit) {
+        loopThroughTileElement('.explore-tile-header h2', 28);
+        loopThroughTileElement('.team-link', 16);
+        $(window).on('resize', function() {
+            loopThroughTileElement('.explore-tile-header h2', 28);
+            loopThroughTileElement('.team-link', 16);
+        })
+    }
+
     /**
      * Select source dataset on click
      */
@@ -55,22 +71,15 @@ $(document).ready(function () {
 
 
         if (viewTypes.indexOf(default_view_url) < 0) { //custom view
-
-
-            href = baseUrl + '/' +  sourceKey;
-            // window.location.href = href;
-            var viewTab = window.open(href, '_blank');
-            viewTab.focus();
+            href = '/' +  sourceKey;
         } else {
             href = '/' + sourceKey + '/' + default_view_url;
             if (default_filterJSON !== '' && default_filterJSON !== null && typeof default_filterJSON !== 'undefined') {
                 href += "?" + default_filterJSON;
             }
-            // window.location.href = ;
-            var viewTab = window.open(baseUrl + href, '_blank');
-            viewTab.focus();
-
          }
+        var viewTab = window.open(baseUrl + href, '_blank');
+        viewTab.focus();
     });
 
     /**
@@ -89,6 +98,13 @@ $(document).ready(function () {
      * Allow click on source dataset URL within the panel
      */
     $('.source-link').on('click', function (e) {
+        e.stopPropagation();
+    });
+
+    /** 
+     * Allow click on team dataset URL within the panel
+     */
+    $('.team-link').on('click', function (e) {
         e.stopPropagation();
     });
 
@@ -467,4 +483,39 @@ function trackEvent(eventName, eventPayload) {
     var basePayload = {source: "client"}; // this lets us identify the source vs the server
     eventPayload = $.extend(basePayload, eventPayload);
     mixpanel.track(eventName, eventPayload);
+}
+
+function setOriginalTextAttribute(element) {
+    $(element).each(function (index, currentElement) {
+        $(currentElement).attr("originalText", currentElement.innerText);
+    })
+}
+
+function loopThroughTileElement(element, fontSize) {
+    var containerWidth = $('.explore-tile-header').width();
+    $(element).each(function (index, currentElement) {
+        var text = $(currentElement).attr("originalText");
+        currentElement.innerText = truncate(containerWidth, text, fontSize);
+
+    })
+}
+
+function truncate(containerWidth, text, fontSize) {
+    // // font size is 28 px
+    // // max number of lines is 2
+    // // so if the length of the title * 28 > the width of the explore tile container * 2, it needs to be truncated
+    var textSize = fontSize * text.length;
+    var containerMax = containerWidth * 2;
+
+    if (textSize/2 > containerMax) {
+        var difference = parseInt((textSize - containerMax)/fontSize);
+        var maxLength = (text.length - 3 - difference) * 2;
+        // console.log(maxLength)
+        // remove the difference from the end of the string
+        truncatedText = text.substring(0, maxLength);
+        truncatedText += "...";
+        return truncatedText
+    }
+    return text;
+
 }
