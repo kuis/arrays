@@ -298,7 +298,7 @@ angular.module('arraysApp')
             $scope.primaryAction.do = angular.noop(); // overwrite with noop, just in case
 
             $scope.$watch('dirty', function(dirty) {
-                if(dirty && !$scope.inProgress && !dataset.connection) {
+                if(dirty && !$scope.inProgress && dataset.fileName) {
                     $scope.importData();
                 }
             });
