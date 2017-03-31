@@ -372,6 +372,7 @@ module.exports.get = function (req, res) {
                     batch.concurrency(1);
 
                     if (!req.session[req.params.id] || !req.session[req.params.id].tables) {
+                        if (!req.session[req.params.id]) req.session[req.params.id] = {};
 
                         batch.push(function(done) {
                             hadoop.initConnection({url:description.connection.url},function(err,tables) {
