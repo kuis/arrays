@@ -233,12 +233,15 @@ angular.module('arraysApp')
                                 var deferred = $q.defer();
                                 DatasetService.getAdditionalSources($stateParams.id)
                                 .then(function(additionalDatasets) {
+
+                                    //console.log(additionalDatasets);
+                    
                                     if (additionalDatasets.length > 0) {
                                         additionalDatasets.map(function(dataset) {
+                                            if (dataset.connection) return;
 
                                             if (dataset.jobId !== 0) {
                     
-
                                                 deferred.reject({importing: true, datasetId: dataset.schemaId});
                                                 return false;
 

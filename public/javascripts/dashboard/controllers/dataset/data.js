@@ -3,7 +3,23 @@ angular.module('arraysApp')
         function ($scope, $state, $q, DatasetService, AuthService, $mdToast,  $filter, dataset, additionalDatasources, availableTypeCoercions, modalService, $window, viewUrlService) {
             $scope.$parent.$parent.currentNavItem = 'data';
 
+
             $scope.availableTypeCoercions = availableTypeCoercions;
+
+            $scope.fieldFilter = {
+                sourceType: "",
+                sourceName: ""
+            }
+            if (dataset.fileName) {
+
+                $scope.fieldFilter.sourceType = 'spreadSheet';
+                $scope.fieldFilter.sourceName = dataset.fileName;
+
+            } else if (dataset.connection) {
+                $scope.fieldFilter.sourceType = 'database';
+                $scope.fieldFilter.sourceName = dataset.connection.url;
+            }
+
             // Assert some of the fields should be available
             if (!dataset.raw_rowObjects_coercionScheme) dataset.raw_rowObjects_coercionScheme = {};
 
@@ -29,6 +45,14 @@ angular.module('arraysApp')
             }
 
             dataset.firstImport = $scope.checkIfFirstImport(dataset.firstImport);
+
+            $scope.changeSourceNameFilter = function(name,sourceType) {
+
+                $scope.fieldFilter.sourceName = name;
+                $scope.fieldFilter.sourceType = sourceType;
+
+            }
+            
 
             // primary actions
             // NOTE dashboard.dataset.process also contains logic
@@ -190,23 +214,30 @@ angular.module('arraysApp')
 
             $scope.openFieldDialog = function (fieldName, firstRecord, custom, customFieldIndex, filterOnly, columnIndex) {
 
+                if ($scope.fieldFilter.sourceName !== dataset.fileName) return; //can only modify master dataset
 
                 var data = {
                     fieldName: fieldName,
                     firstRecord: firstRecord,
-                    dataset: $scope.$parent.$parent.dataset,
                     availableTypeCoercions: availableTypeCoercions,
                     custom: custom,
+                    dataset: $scope.$parent.$parent.dataset,
                     customFieldIndex: customFieldIndex,
                     filterOnly: filterOnly,
                     columnIndex: columnIndex
                 };
 
+               
 
                 modalService.openDialog('field', data)
+
                     .then(function(savedDataset) {
+           
+   
                         $scope.$parent.$parent.dataset = savedDataset;
+                     
                         $scope.coercionScheme = angular.copy(savedDataset.raw_rowObjects_coercionScheme);
+
                         sortColumnsByDisplayOrder();
                         $scope.vm.dataForm.$setDirty();
                         if(filterOnly) {
@@ -269,7 +300,6 @@ angular.module('arraysApp')
                     colsAvailable: colsAvailable,
                     fields: $scope.originalFields,
                     openFieldDialog: $scope.openFieldDialog
-
                 };
 
                 modalService.openDialog('fabricated', data)
@@ -297,6 +327,10 @@ angular.module('arraysApp')
             //         });
             // };
 
+            $scope.switchFields = function() {
+
+            }
+
 
             $scope.openJoinDialog = function() {
                 var data = {
@@ -319,6 +353,7 @@ angular.module('arraysApp')
 
 
             function sortColumnsByDisplayOrder() {
+
 
                 $scope.data.fields = $scope.originalFields = $scope.$parent.$parent.dataset.columns.concat(
                     $scope.$parent.$parent.dataset.customFieldsToProcess.map(function(customField, index) {
@@ -406,6 +441,12 @@ angular.module('arraysApp')
                             $scope.$parent.$parent.dataset.fe_fieldDisplayOrder.indexOf(column2.name);
                 });
 
+
+                $scope.$parent.$parent.additionalDatasources.map(function(datasource) {
+                    $scope.data.fields = $scope.data.fields.concat(datasource.columns);
+                })
+
+              
 
             }
 
@@ -543,7 +584,7 @@ angular.module('arraysApp')
                                 .hideDelay(3000)
                         );
 
-                        _nextTab();
+                        // _nextTab();
 
                     };
 
