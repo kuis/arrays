@@ -19,6 +19,9 @@ angular
 
                 // Update Intercom state
                 window.Intercom('update');
+
+                // Update UserEngage state
+                UE.pageHit({apiKey: $scope.env.userEngageAPIKey});
             });
 
             /**
@@ -128,6 +131,9 @@ angular
                 // Shut down Intercom when loggin out
                 window.Intercom('shutdown');
 
+                // Shut down UserEngage when loggin out
+                UE.destroy({});
+
                 AuthService.logout();
             };
 
@@ -152,6 +158,25 @@ angular
                     $mdSidenav(navID).toggle();
                 };
             }
+
+              var optionsUE = {
+                apiKey: $scope.env.userEngageAPIKey,
+                name: $scope.user.firstName + ' ' + $scope.user.lastName, // Full name
+                email: $scope.user.email, // Email address
+                created_at: new Date($scope.user.createdAt).getTime() / 1000, // Signup date as a Unix timestamp
+                company:  {
+                    // id: $scope.user.defaultLoginTeam._id,
+                    name: $scope.user.defaultLoginTeam.title,
+                    created_at: new Date($scope.user.defaultLoginTeam.createdAt).getTime() / 1000,
+                    plan: $scope.user.defaultLoginTeam.subscription ? $scope.user.defaultLoginTeam.subscription.plan.plan_code : ''
+                },
+                team_title: $scope.user.defaultLoginTeam.title, // String
+                subdomain: $scope.user.defaultLoginTeam.subdomain, // String
+                sample_viz_created: $scope.user.sampleImported // Boolean
+              }
+              // console.log(optionsUE)
+              UE.pageHit(optionsUE);
+
 
 
             var options = {

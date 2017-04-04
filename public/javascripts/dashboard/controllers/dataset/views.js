@@ -21,6 +21,7 @@ angular.module('arraysApp')
                 $scope.$parent.$parent.dataset.fe_views = $scope.previewCopy.fe_views;
                 $scope.primaryAction.text = '';
             }
+            $scope.keywordsChanged = false;
 
             // never needs to be disabled--if it is not needed, it is hidden
             $scope.secondaryAction.disabled = false;
@@ -52,8 +53,12 @@ angular.module('arraysApp')
 
             $scope.$watch('previewCopy', function(previewExist) {
                 $scope.setRemindUserUnsavedChanges(previewExist);
-
-                if (dataset.imported && dataset.dirty == 0 && previewExist !== null && previewExist._id) {
+                // logic for wordCloud keywords
+                if ($scope.keywordsChanged) {
+                    $scope.primaryAction.disabled = false;
+                    $scope.primaryAction.text = 'Save';
+                    $scope.primaryAction.do = $scope.submitForm;
+                } else if (dataset.imported && dataset.dirty == 0 && previewExist !== null && previewExist._id) {
                     $scope.primaryAction.disabled = false;
                     $scope.primaryAction.text = dataset.firstImport ? 'Next' : 'Save';
                     $scope.primaryAction.do = $scope.submitForm;
@@ -201,8 +206,7 @@ angular.module('arraysApp')
                                 $scope.data.default_view = preview.fe_views.default_view;
                                 $scope.$parent.$parent.dataset.fe_views.view = $scope.previewCopy.fe_views;
 
-                            }
-
+                            } 
                         }
 
 
@@ -254,9 +258,16 @@ angular.module('arraysApp')
                     })
                         .then(function (savedDataset) {
 
-                            /** If user saves changes to a view, make it visible */
+                            /** If user saves changes to a view, make it visible for what's being saved and also on the dataset copy */
+                            dataset.fe_views.views[data.name] = {visible: true};
                             savedDataset.fe_views.views[data.name].visible = true;
-
+                            if (data.name == "wordCloud") {
+                                if (reImportKeywordsCache(savedDataset.fe_views.views[data.name].keywords)) {
+                                    $scope.keywordsChanged = true;
+                                    savedDataset.dirty = 3;
+                                    $scope.tutorial.message = "You have unprocessed changes. \'Save\' to process."
+                                }
+                            }
                             $scope.$parent.$parent.dataset = savedDataset;
 
                             $scope.data.default_view = savedDataset.fe_views.default_view;
@@ -271,6 +282,21 @@ angular.module('arraysApp')
 
                 });
             };
+
+            function reImportKeywordsCache(keywords) {
+                if ($scope.$parent.$parent.dataset.fe_views.views["wordCloud"]) {
+                    var savedKeywords = $scope.$parent.$parent.dataset.fe_views.views["wordCloud"].keywords;
+                    if (savedKeywords) {
+                        if (savedKeywords.length == keywords.length) {
+                            if (savedKeywords[savedKeywords.length - 1] == keywords[keywords.length - 1]) {
+                                // nothing has changed
+                                return false;
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
 
             $scope.openViewPreview = function(viewName) {
 
@@ -315,6 +341,17 @@ angular.module('arraysApp')
 
                                 $scope.previewCopy = null;
                                 $scope.$parent.$parent.dataset.fe_views = response.data.finalView;
+
+                                if ($scope.keywordsChanged) {
+                                    dataset.firstImport = 0;
+                                    dataset.dirty = 0;
+                                    $scope.keywordsChanged = false;
+                                    $state.transitionTo('dashboard.dataset.process', {id: $scope.$parent.$parent.dataset._id}, {
+                                        reload: true,
+                                        inherit: false,
+                                        notify: true
+                                    });
+                                }
 
                                 $mdToast.show(
                                 $mdToast.simple()
@@ -572,7 +609,7 @@ angular.module('arraysApp')
                 };
 
                 $scope.AppendNumberOfItems = function(menu, cols) {
-                    if (menu == 'Aggregate By') {
+                    if (menu == 'Aggregate By' || menu == 'Y Axis') {
                         cols.push('Number of Items');
                     }
                     return cols;

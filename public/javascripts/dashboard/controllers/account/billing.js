@@ -338,8 +338,8 @@ angular.module('arraysApp')
 
                                 $mdDialog.hide();
                             });
-
-                            $state.go('dashboard.account.billing');
+                            window.location.reload(true);
+                            // $state.go('dashboard.account.billing', {}, {reload: true});
                         } else {
                             $mdToast.show(
                                 $mdToast.simple()
@@ -438,7 +438,7 @@ angular.module('arraysApp')
                             };
                         }
                         $window.sessionStorage.setItem('team', JSON.stringify($scope.$parent.team));
-                        $scope.plan = res.data.subscription
+                        $scope.plan = res.data.subscription;
 
                         $mdToast.show(
                             $mdToast.simple()
@@ -455,57 +455,24 @@ angular.module('arraysApp')
                 })
             }
 
-            // $scope.startTrialSubscription = function(plan_code, quantity) {
-            //     Subscriptions.save({ 'plan_code': plan_code, 'quantity': quantity })
-            //     .$promise.then(function(res) {
-            //         // $log.log(res.data);
-            //         console.log(res)
-            //         if (res.statusCode === 200 || res.statusCode === 201) {
-            //             console.log(res.data)
-            //             if ($scope.$parent.team.subscription) {
-            //                 $scope.$parent.team.subscription.state = res.data.subscription.state;
-            //                 $scope.$parent.team.subscription.quantity = res.data.subscription.quantity._;
-            //             } else {
-            //                 $scope.$parent.team.subscription = {
-            //                     state: res.data.subscription.state,
-            //                     quantity: res.data.subscription.quantity._
-            //                 };
-            //             }
-            //             $window.sessionStorage.setItem('team', JSON.stringify($scope.$parent.team));
-
-            //             $mdToast.show(
-            //                 $mdToast.simple()
-            //                 .textContent('Subscription started')
-            //                 .action('Ok')
-            //                 .position('top right')
-            //                 .hideDelay(3000)
-            //             );
-
-            //             $state.go('dashboard.account.billing');
-            //         } else {
-            //             // $log.log(res.data);
-            //         }
-            //     });
-            // };
-
             // Start new subscription after expired
             var startSubscription = function(plan_code, quantity, callback) {
                 Subscriptions.save({ 'plan_code': plan_code, 'quantity': quantity, 'skipTrial': true })
                 .$promise.then(function(res) {
-                    // $log.log(res);
-
                     if (res.statusCode === 200 || res.statusCode === 201) {
-                        if ($scope.$parent.team.subscription) {
-                            $scope.$parent.team.subscription.state = res.data.subscription.state;
-                            $scope.$parent.team.subscription.quantity = res.data.subscription.quantity._;
-                        } else {
-                            $scope.$parent.team.subscription = {
-                                state: res.data.subscription.state,
-                                quantity: res.data.subscription.quantity._
-                            };
+                        if ($scope.$parent) {
+                            if ($scope.$parent.team.subscription) {
+                                $scope.$parent.team.subscription.state = res.data.subscription.state;
+                                $scope.$parent.team.subscription.quantity = res.data.subscription.quantity._;
+                            } else {
+                                $scope.$parent.team.subscription = {
+                                    state: res.data.subscription.state,
+                                    quantity: res.data.subscription.quantity._
+                                };
+                            }
                         }
                         $window.sessionStorage.setItem('team', JSON.stringify($scope.$parent.team));
-                        
+
                         getSubscriptions(function() {
                             return callback();
                         });
