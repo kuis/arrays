@@ -250,6 +250,7 @@ module.exports.BindData = function (req, urlQuery, callback) {
 
                     user: user,
 
+                    arrayTitle: dataSourceDescription.title,
                     displayTitleOverrides:  _.cloneDeep(dataSourceDescription.fe_displayTitleOverrides),
 
                     documents: documents,
