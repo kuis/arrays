@@ -25,6 +25,8 @@ module.exports.BindData = function (req, urlQuery, callback) {
     var askForPreview = false;
     if (urlQuery.preview && urlQuery.preview == 'true') askForPreview = true;
 
+    
+
     importedDataPreparation.DataSourceDescriptionWithPKey(askForPreview,collectionPKey)
         .then(function (dataSourceDescription) {
             if (dataSourceDescription == null || typeof dataSourceDescription === 'undefined') {

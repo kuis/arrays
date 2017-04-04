@@ -97,7 +97,7 @@ module.exports.BindData = function (req, callback) {
 
                 var reformattedDataset = {
                     _id: description._id,
-                    key:  description.uid + '-r' + description.importRevision,
+                    key:  description.uid,
                     sourceDoc: doc,
                     updatedAt: description.updatedAt,
                     createdAt: description.createdAt,

@@ -39,7 +39,7 @@ module.exports.BindData = function (req, teamDescription, callback) {
 
             var sourceDescription = {
 
-                key: dataSourceDescription.uid + '-r' + dataSourceDescription.importRevision,
+                key: dataSourceDescription.uid,
                 title: dataSourceDescription.title,
                 brandColor: dataSourceDescription.brandColor,
                 description: dataSourceDescription.description,
@@ -80,7 +80,7 @@ module.exports.BindData = function (req, teamDescription, callback) {
 
                 var sourceDescription = {
                     _id: dataSourceDescription._id,
-                    key: dataSourceDescription.uid + '-r' + dataSourceDescription.importRevision,
+                    key: dataSourceDescription.uid,
                     sourceDoc: doc,
                     updatedAt: dataSourceDescription.updatedAt,
                     createdAt: dataSourceDescription.createdAt,
