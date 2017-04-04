@@ -719,7 +719,7 @@ module.exports.save = function (req, res) {
                 var description = doc, description_title = doc.title;
                 if (doc.schema_id) {
                     description = datasource_description.Consolidate_descriptions_hasSchema(doc);
-                    description_title = description.title + ' (' + doc.dataset_uid + ') ';
+                    description_title = description.titl;
                     winston.info("🔁  Updating the dataset " + description_title + "...");
                 }
                 var update = {$set:{}};
@@ -751,7 +751,11 @@ module.exports.save = function (req, res) {
                 if (Object.keys(update.$set).length == 0) { //nothing to update
                     callback(null,doc,false,null);
                 } else {
-                    if (!doc.imported || doc.imported == false || doc.imported == null || doc._team.isEnterprise) {
+
+                  
+                    console.log(doc._team)
+
+                    if (!doc.imported || doc.imported == false || doc.imported == null || (doc._team && doc._team.isEnterprise)) {
                         callback(null,doc,false,update);
                     } else callback(null,doc,makeCopy,update); 
                 }
