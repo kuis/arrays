@@ -41,16 +41,20 @@ function sendEmail (mailOptions,callback) {
 }
 
 module.exports.sendVizFinishProcessingEmail = function(user,dataset,team,cb) {
+
+
     var default_view = dataset.fe_views.default_view;
     var protocol = process.env.USE_SSL === 'true' ? 'https://' : 'http://';
     var datasetTitle = dataset.title;
     var datasetUID = dataset.uid;
     var datasetRevision = dataset.importRevision;
 
-    if (dataset.schema_id && !(datasetTitle || datasetUID || datasetRevision)) {
-        datasetTitle = dataset.schema_id.title;
-        datasetUID = dataset.schema_id.uid;
-        datasetRevision = dataset.schema_id.importRevision;
+
+    if (dataset.schema_id && (!datasetTitle || !datasetUID || !datasetRevision)) {
+        datasetTitle = dataset.schema_id.title || datasetTitle;
+
+        datasetUID = dataset.schema_id.uid || datasetUID;
+        datasetRevision = dataset.schema_id.importRevision || datasetRevision;
         default_view = dataset.schema_id.fe_views.default_view;
     }
 
@@ -63,7 +67,10 @@ module.exports.sendVizFinishProcessingEmail = function(user,dataset,team,cb) {
         link = protocol + team.subdomain + '.' + rootDomain + '/' + dataset.uid + '-r' + dataset.importRevision + '/' + default_view;
         linkMsg = 'Use the following link to view your visualization:';
     } else {
-        link = protocol + 'app.' + rootDomain +  '/dashboard/dataset/views/' + dataset._id;
+
+        link = protocol;
+        link += (process.env.NODE_ENV !== 'enterprise') ? 'app.' : '';
+        link += rootDomain +  '/dashboard/dataset/views/' + dataset._id;
         linkMsg = 'Use the following link to continue editing your visualization:';
     }
 

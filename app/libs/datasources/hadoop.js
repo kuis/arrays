@@ -33,8 +33,10 @@ var db;
 
 
 
-function _readColumnsAndSample(tableName,fn) {
+function _readColumnsAndSample(url,tableName,fn) {
 
+    //return fn(null,[{name:'colA',sample:'123',sourceType:'database',
+     //   sourceName: url}, {name: 'colB',sample:'stringjiwji24',sourceType:'database',sourceName: url}]);
 
     db.reserve(function(err,connObj) {
 
@@ -72,7 +74,7 @@ function _readColumnsAndSample(tableName,fn) {
                     var data = [];
                     var firstRecord = array[0];
                     for (var col in firstRecord) {
-                        data.push({name: col,sample:firstRecord[col]});
+                        data.push({sourceName: url,name: col,sample:firstRecord[col], sourceType: 'database'});
                     }
                     callback(null,data);
                 }
@@ -99,13 +101,13 @@ module.exports.readColumnsAndSample = function(body,tableName,fn) {
 
     if (db) {
 
-        _readColumnsAndSample(tableName,fn);
+        _readColumnsAndSample(body.url,tableName,fn);
 
     } else {
 
         _initConnection(body.url,function(err) {
             if (err) fn(err);
-             _readColumnsAndSample(tableName,fn);
+             _readColumnsAndSample(body.url,tableName,fn);
 
         })
 
@@ -167,6 +169,9 @@ function _readAllTables(fn) {
 }
 
 function _initConnection(url,callback) {
+    //return callback(null);
+
+
     winston.info("ready to init a new connection.");
     var config = {
         url: url,
@@ -191,10 +196,13 @@ function _initConnection(url,callback) {
 
 module.exports.initConnection = function(body,callback) {
 
+    //return callback(null,[{tab_name:'a'},{tab_name:'b'}]);
 
 
 
     if (db) {
+
+
         winston.info("init connection: connection already made.");
 
         _readAllTables(function(err,data) {
@@ -272,7 +280,6 @@ function _runQuery(query,fn) {
                 var errorFromFuncions = err;
                 db.release(connObj,function(err) {
                     if (err || errorFromFuncions) {
-
                         winston.error("Error running query");
                         console.log("err in releasing db : %s", err);
                         console.log("err from function executing query : %s",errorFromFuncions);

@@ -81,7 +81,7 @@ if (process.env.NODE_ENV !== 'enterprise') {
     if (process.env.AUTH_PROTOCOL == 'LDAP') {
 
          var SamlStrategy = require('passport-saml').Strategy;
-         var configPath = '../user/' + (process.env.subdomain) + '/src/config.json';
+         var configPath = '../user/' + (process.env.SUBDOMAIN) + '/src/config.json';
          var authConfig = require(configPath);
 
          var samlStrategy = new SamlStrategy({
