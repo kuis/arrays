@@ -49,7 +49,8 @@ module.exports.addNewColumnsToFE_ExcludeFields = _addNewColumnsToFE_ExcludeField
 
 
 var checkForContinutity = function(name, rowObjects) {
-    if (rowObjects.hasOwnProperty(name)) {
+
+    if (rowObjects && rowObjects.hasOwnProperty(name)) {
         return true;
     } else {
         return false;
