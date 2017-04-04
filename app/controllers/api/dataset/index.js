@@ -1162,7 +1162,7 @@ module.exports.download = function (req, res) {
 module.exports.preImport = function (req, res) {
     var importedBy = req.user._id;
 
-    console.log(importedBy);
+    //console.log(importedBy);
 
     datasource_description.findByIdAndUpdate(req.params.id,{$set: {lastImportInitiatedBy: importedBy}})
     .exec(function(err) {
