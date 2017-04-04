@@ -902,7 +902,7 @@ module.exports.upload = function (req, res) {
             .exec(function (err, doc) {
     
                 if (err) return done(err);
-                if (doc.fileName) {
+                if (doc.fileName && !child) {
                     oldFileName = doc.fileName;
                     replacement = true;
                 }
