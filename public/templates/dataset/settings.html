@@ -6,7 +6,7 @@
         <h4 class="no-padding">Change your display and publishing settings below.</h4>
 
         <md-input-container class="md-block" style="margin-top: 45px;">
-            <label>Title</label>
+            <label>Title  (Note: Changing the title will also change the URL for this visualization)</label>
             <input unique-title required name="title" ng-model="dataset.title" dataset-id="dataset._id" submitting-flag="submitting">
             <div ng-messages="vm.settingsForm.title.$error">
                 <div ng-message="required">This is required.</div>
