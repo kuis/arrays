@@ -10,7 +10,7 @@ var _dataSourceDescriptionWithPKey = function (preview,source_pKey) {
 
 
     var split = source_pKey.split("-");
-    if (split.length != 3 && process.env.NODE_ENV !== 'enterprise') {
+    if (split.length != 2 && process.env.NODE_ENV !== 'enterprise') {
         return new Promise(function (resolve, reject) {
             reject();
         });
@@ -18,8 +18,10 @@ var _dataSourceDescriptionWithPKey = function (preview,source_pKey) {
     
     var subdomain = process.env.NODE_ENV !== 'enterprise'? split[0]: null;
     var uid = process.env.NODE_ENV !== 'enterprise'? split[1] : split[0];
-    var revision = process.env.NODE_ENV !== 'enterprise'? split[2].substring(1): split[1].substring(1);
+    var revision = process.env.NODE_ENV !== 'enterprise'? split.length== 2? '1' : split[2].substring(1): split[1].substring(1);
 
+
+   
 
     return new Promise(function (resolve, reject) {
         var dataSourceDescriptions = require('../../models/descriptions');
@@ -28,6 +30,7 @@ var _dataSourceDescriptionWithPKey = function (preview,source_pKey) {
 
         dataSourceDescriptions.GetDescriptionsWith_subdomain_uid_importRevision(preview,subdomain,uid, revision, function (err, data) {
             if (err) reject(err);
+        
 
             resolve(data);
         })
