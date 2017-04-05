@@ -324,6 +324,12 @@ body:not(.array-controls-pinned) .navbar-default.background-color-brand .navbar-
 	font-size: 18px;
 }
 
+@media (max-width: 767px) {
+	.user-initial {
+		bottom: 22px;
+	}
+}
+
 .light-text .dropdown .dropdown-toggle .user-initial {
 	background-color: #FFF;
 	color: #000;
