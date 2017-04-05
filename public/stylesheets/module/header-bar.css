@@ -156,6 +156,17 @@
 
 /* @end pinned */
 
+/* Header Info Modal */
+.header-modal .modal-body h3 {
+	margin-top: 0px;
+}
+
+.header-modal .modal-header .close {
+    margin-top: -5px;
+    margin-right: -10px;
+}
+
+
 /* @group Filter active */
 
 /* why is this here? */
@@ -322,6 +333,12 @@ body:not(.array-controls-pinned) .navbar-default.background-color-brand .navbar-
 	left: 0px;
 	border-radius: 100%;
 	font-size: 18px;
+}
+
+@media (max-width: 767px) {
+	.user-initial {
+		bottom: 22px;
+	}
 }
 
 .light-text .dropdown .dropdown-toggle .user-initial {
